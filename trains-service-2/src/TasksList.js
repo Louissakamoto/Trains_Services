@@ -14,6 +14,7 @@ import moment from "moment";
 
 const TasksList = ({ tasks }) => {
 
+	const [availableTasks, setAvailableTasks] = useState([]);
 	const [isAdmin, setIsAdmin] = useState("User");
 	//declartion of dynamic variables to track if the user's role
 	const location = useLocation();
@@ -22,6 +23,8 @@ const TasksList = ({ tasks }) => {
 	useEffect(() => {
 		setIsAdmin(sessionStorage.getItem("role"));
 		//setting the role as the one stored in the session storage
+		setAvailableTasks(sessionStorage.getItem("tasks"));
+		//update the dynamic variables outside of the function
 	}, []);
 
 	const handleDelayNotification = (task) => {
@@ -373,7 +376,7 @@ const TasksList = ({ tasks }) => {
 				</div>
 			</div>
 			{tasks.map((task) => ( //looping through the tasks objects fetched in the tasks component (extract 21)
-				(task.wysylkaDoKlienta === false) && //display the data regarding an order only if it has no yet been completed
+				((task.wysylkaDoKlienta === false) && (availableTasks.includes(task.id))) && //display the data regarding an order only if it has no yet been completed
 				(<div className="task-preview" key={task.id}>
 					<Link className="task-preview-inner row" to={`/tasks/${task.id}`}>
 						<div className="task-preview-section col-lg-1">
